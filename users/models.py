@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
+# 自定义用户model
 class UserProfile(AbstractUser):
     nick_name = models.CharField(max_length=50, verbose_name='昵称', default='')
     birthday = models.DateField(verbose_name='生日', null=True, blank=True)
@@ -19,6 +20,7 @@ class UserProfile(AbstractUser):
         return self.username
 
 
+# 邮箱验证码model
 class EmailVerifyRecord(models.Model):
     code = models.CharField(max_length=20, verbose_name='验证码')
     email = models.EmailField(max_length=50, verbose_name='邮箱')
@@ -34,6 +36,7 @@ class EmailVerifyRecord(models.Model):
         return '{0}({1})'.format(self.code, self.email)
 
 
+# 轮播图model
 class Banner(models.Model):
     title = models.CharField(max_length=100, verbose_name='标题')
     image = models.ImageField(max_length=100, verbose_name='轮播图', upload_to='banner/%Y/%m')
