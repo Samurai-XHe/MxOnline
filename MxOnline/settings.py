@@ -119,9 +119,9 @@ USE_L10N = True
 
 USE_TZ = False
 
+# 指定自定义的用户验证引擎
 AUTHENTICATION_BACKENDS = [
-    'users.views.CustomBackend',
-]
+    'users.views.CustomBackend',]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
