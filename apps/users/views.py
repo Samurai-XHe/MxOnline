@@ -4,7 +4,7 @@ from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from django.views.generic.base import View
 from .models import UserProfile
-from .forms import LoginForm
+from .forms import LoginForm, RegisterForm
 
 
 # 自定义用户验证引擎，在settings中用AUTHENTICATION_BACKENDS指定该类
@@ -16,15 +16,21 @@ class CustomBackend(ModelBackend):
             # 检查密码是否正确
             if user.check_password(password):
                 return user
-        except Exception as e:
+        except Exception:
             return None
 
 
+class RegisterView(View):
+    def get(self, request):
+        register_form = RegisterForm()
+        return render(request, 'register.html', {'register_form': register_form})
+
+
 class LoginView(View):
-    def get(self,request):
+    def get(self, request):
         return render(request, 'login.html')
 
-    def post(self,request):
+    def post(self, request):
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
             user_name = request.POST.get('username', '')
