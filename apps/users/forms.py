@@ -24,7 +24,7 @@ class RegisterForm(forms.Form):
     email = forms.EmailField(
         required=True,
         error_messages={
-            'required': '请填写用户名'
+            'required': '请填写一个有效的EMAIL地址'
         })
     password = forms.CharField(
         required=True,

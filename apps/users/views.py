@@ -3,9 +3,10 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from django.views.generic.base import View
+from django.contrib.auth.hashers import make_password
 from .models import UserProfile
 from .forms import LoginForm, RegisterForm
-
+from utils.email_send import send_register_email
 
 # 自定义用户验证引擎，在settings中用AUTHENTICATION_BACKENDS指定该类
 class CustomBackend(ModelBackend):
@@ -24,6 +25,23 @@ class RegisterView(View):
     def get(self, request):
         register_form = RegisterForm()
         return render(request, 'register.html', {'register_form': register_form})
+
+    def post(self, request):
+        register_form = RegisterForm(request.POST)
+        if register_form.is_valid():
+            user_name = register_form.cleaned_data['email']
+            pass_word = register_form.cleaned_data['password']
+            user_profile = UserProfile()
+            user_profile.username = user_name
+            user_profile.email = user_name
+            user_profile.password = make_password(pass_word)
+            user_profile.is_active = False
+            user_profile.save()
+            # 发送邮件
+            send_register_email(user_name, 'register')
+            return render(request, 'login.html')
+        else:
+            return render(request, 'register.html', {'register_form': register_form})
 
 
 class LoginView(View):

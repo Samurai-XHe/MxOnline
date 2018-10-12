@@ -133,3 +133,10 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = '847834358@qq.com'
+EMAIL_HOST_PASSWORD = 'ptsqgjzldiyhbcah'  # 授权码
+EMAIL_FROM = '847834358@qq.com'
+EMAIL_USE_SSL = True  # 与SMTP服务器通信时，是否启动TLS链接(安全链接)
