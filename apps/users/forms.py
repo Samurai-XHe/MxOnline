@@ -9,7 +9,7 @@ class LoginForm(forms.Form):
     username = forms.CharField(
         required=True,
         error_messages={
-            'required':'请填写用户名'
+            'required': '请填写用户名'
         })
     password = forms.CharField(
         required=True,
@@ -34,3 +34,14 @@ class RegisterForm(forms.Form):
             'min_length': '密码至少五位'
         })
     captcha = CaptchaField()
+
+
+class ForgetForm(forms.Form):
+    email = forms.EmailField(required=True)
+    captcha = CaptchaField(error_messages={'invalid': '验证码错误'})
+
+
+class ModifyPwdForm(forms.Form):
+    password1 = forms.CharField(required=True, min_length=5)
+    password2 = forms.CharField(required=True, min_length=5)
+
