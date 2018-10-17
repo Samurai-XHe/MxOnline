@@ -42,7 +42,7 @@ class RegisterView(View):
             user_profile.save()
             # 发送邮件
             send_register_email(user_name, 'register')
-            return render(request, 'login.html')
+            return render(request, 'login.html', {'msg': '邮箱激活链接已发送至您的邮箱，请先激活账号'})
         else:
             return render(request, 'register.html', {'register_form': register_form})
 
@@ -78,7 +78,7 @@ class ActiveUserView(View):
             user = UserProfile.objects.get(email=email)
             user.is_active = True
             user.save()
-            return render(request, 'login.html')
+            return render(request, 'login.html', {'msg': '您的账号已激活，请登录'})
         else:
             return render(request, 'register.html', {'msg': '您的激活链接无效'})
 
@@ -93,8 +93,10 @@ class ForgetPwdView(View):
         forget_form = ForgetForm(request.POST)
         if forget_form.is_valid():
             email = request.POST.get('email')
+            if not UserProfile.objects.filter(email=email).exists():
+                return render(request, 'forgetpwd.html', {'msg': '邮箱不存在'})
             send_register_email(email, 'forget')
-            return render(request ,'login.html', {'msg': '重置密码邮件已发送，请注意查收'})
+            return render(request , 'login.html', {'msg': '重置密码邮件已发送，请注意查收'})
         else:
             return render(request, 'forgetpwd.html', {'forget_form': forget_form})
 
@@ -119,7 +121,7 @@ class ModifyPwdView(View):
             pwd2 = request.POST.get('password2', '')
             email = request.POST.get('email', '')
             if pwd1 != pwd2:
-                return render(request, 'password_reset.html', {'email': email, 'msg': '密码不一致'})
+                return render(request, 'password_reset.html', {'email': email, 'msg': '两次密码不一致'})
             user = UserProfile.objects.get(email=email)
             user.password = make_password(pwd2)
             user.save()
