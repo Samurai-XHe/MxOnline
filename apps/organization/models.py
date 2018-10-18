@@ -25,11 +25,17 @@ class CourseOrg(models.Model):
     fav_nums = models.IntegerField(default=0, verbose_name='收藏数')
     image = models.ImageField(
         upload_to='org/%Y/%m',
-        verbose_name='封面图',
+        verbose_name='Logo',
         max_length=100)
     address = models.CharField(max_length=150, verbose_name='机构地址')
     # 一个城市可以有很多课程机构，通过将city设置外键，变成课程机构的一个字段
     # 可以让我们通过机构找到城市
+    category = models.CharField(
+        max_length=20,
+        choices=(('pxjg', '培训机构'), ('gx', '高校'), ('gr', '个人')),
+        default='pxjg',
+        verbose_name='机构类别'
+    )
     city = models.ForeignKey(CityDict, on_delete=models.CASCADE, verbose_name='所在城市')
     add_time = models.DateTimeField(auto_now_add=True, verbose_name='添加时间')
 

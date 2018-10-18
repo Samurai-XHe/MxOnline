@@ -76,6 +76,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 添加{{ MEDIA_URL }}模板变量的处理器
+                'django.template.context_processors.media',
             ],
         },
     },
