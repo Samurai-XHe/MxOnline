@@ -36,6 +36,8 @@ class CourseOrg(models.Model):
         default='pxjg',
         verbose_name='机构类别'
     )
+    students = models.IntegerField(default=0, verbose_name='学习人数')
+    course_nums = models.IntegerField(default=0, verbose_name='课程数')
     city = models.ForeignKey(CityDict, on_delete=models.CASCADE, verbose_name='所在城市')
     add_time = models.DateTimeField(auto_now_add=True, verbose_name='添加时间')
 
