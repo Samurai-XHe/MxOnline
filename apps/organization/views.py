@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views.generic.base import View
+from django.http import JsonResponse
 from .models import CourseOrg, CityDict
+from .forms import UserAskForm
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
 
@@ -52,4 +54,15 @@ class OrgView(View):
             'hot_orgs': hot_orgs,
             'sort': sort,
         })
+
+
+class AddUserAskView(View):
+    def post(self, request):
+        userask_form = UserAskForm(request.POST)
+        if userask_form.is_valid():
+            userask_form.save(commit=True)
+            return JsonResponse({'status': 'success'})
+        else:
+            return JsonResponse({'status': 'fail', 'msg': '{0}'.format(userask_form.errors)})
+
 
