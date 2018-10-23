@@ -66,3 +66,38 @@ class AddUserAskView(View):
             return JsonResponse({'status': 'fail', 'msg': '{0}'.format(userask_form.errors)})
 
 
+class OrgHomeView(View):
+    # 机构首页
+    def get(self, request, org_id):
+        if CourseOrg.objects.filter(pk=org_id).exists():
+            course_org = CourseOrg.objects.get(pk=org_id)
+        else:
+            return render(request, 'org-list.html')
+        all_courses = course_org.course_set.all()[:3]
+        all_teachers = course_org.teacher_set.all()[:2]
+
+        return render(request, 'org-detail-homepage.html', {
+            'all_courses': all_courses,
+            'all_teachers': all_teachers,
+            'course_org': course_org,
+            'current_page': 'org'
+        })
+
+
+class OrgCourseView(View):
+    # 机构课程列表页
+    def get(self, request, org_id):
+        if CourseOrg.objects.filter(pk=org_id).exists():
+            course_org = CourseOrg.objects.get(pk=org_id)
+        else:
+            return render(request, 'org-list.html')
+        all_courses = course_org.course_set.all()
+
+        return render(request, 'org-detail-course.html', {
+            'all_courses': all_courses,
+            'course_org': course_org,
+            'current_page': 'courses'
+        })
+
+
+

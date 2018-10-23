@@ -1,4 +1,5 @@
 from django.db import models
+from organization.models import CourseOrg
 
 
 # 课程信息表
@@ -24,6 +25,7 @@ class Course(models.Model):
     # 保存点击量，点进页面就算
     click_nums = models.IntegerField(default=0, verbose_name='点击数')
     add_time = models.DateTimeField(auto_now_add=True, verbose_name='添加时间')
+    course_org = models.ForeignKey(CourseOrg, on_delete=models.CASCADE, verbose_name='所属机构', null=True, blank=True)
 
     class Meta:
         verbose_name = '课程'
