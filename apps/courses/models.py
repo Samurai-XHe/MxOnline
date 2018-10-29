@@ -1,5 +1,5 @@
 from django.db import models
-from organization.models import CourseOrg
+from organization.models import CourseOrg, Teacher
 
 
 # 课程信息表
@@ -28,6 +28,10 @@ class Course(models.Model):
     course_org = models.ForeignKey(CourseOrg, on_delete=models.CASCADE, verbose_name='所属机构', null=True, blank=True)
     category = models.CharField(max_length=20, default='', verbose_name='课程类别')
     tag = models.CharField(max_length=15, default='' ,verbose_name='课程标签')
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='讲师', null=True, blank=True)
+    you_need_know = models.CharField(max_length=300, default='一颗勤学的心是本课程必要前提', verbose_name='课程须知')
+    teacher_tell = models.CharField(max_length=300, default='按时交作业,不然叫家长', verbose_name='老实告诉你')
+
 
     class Meta:
         verbose_name = '课程'
@@ -68,6 +72,8 @@ class Video(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='章节')
     name = models.CharField(max_length=100, verbose_name='视频名')
     add_time = models.DateTimeField(auto_now_add=True, verbose_name='添加时间')
+    url = models.CharField(max_length=200, default='http://blog.mtianyan.cn', verbose_name='访问地址')
+    learn_times = models.IntegerField(default=0, verbose_name='学习时长(分钟数)')
 
     class Meta:
         verbose_name = '视频'
