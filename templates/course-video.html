@@ -16,7 +16,7 @@
 			<ul>
 				<li><a href="{% url 'index' %}">首页</a>></li>
                 <li><a href="{% url 'course:list' %}">公开课程</a>></li>
-				<li><a href="{% url 'course:course_detail' course.id %}">课程详情</a>></li>
+				<li><a href="{% url 'course:course_detail' course.id %}">{{ course.name }}</a>></li>
                 <li>章节信息</li>
 			</ul>
 		</div>
@@ -59,8 +59,8 @@
             <div class="content">
                 <div class="mod-tab-menu">
                     <ul class="course-menu clearfix">
-                        <li><a class="ui-tabs-active active" id="learnOn"  href="course-video.html"><span>章节</span></a></li>
-                        <li><a id="commentOn" class="" href="course-comment.html"><span>评论</span></a></li>
+                        <li><a class="ui-tabs-active active" id="learnOn"  href="{% url 'course:course_info' course.id %}"><span>章节</span></a></li>
+                        <li><a id="commentOn" class="" href="{% url 'course:course_comments' course.id %}"><span>评论</span></a></li>
                     </ul>
                 </div>
                 <div id="notice" class="clearfix">
@@ -76,7 +76,7 @@
                         <ul class="video">
                             {% for video in lesson.video_set.get_queryset %}
                                 <li>
-                                    <a target="_blank" href='/video/3662' class="J-media-item studyvideo">
+                                    <a target="_blank" href="{% url 'course:video_play' video.id %}" class="J-media-item studyvideo">
                                         {{ video.name }} ({{ video.learn_times }}分钟)
                                         <i class="study-state"></i>
                                     </a>
@@ -134,42 +134,14 @@
                             <div class="cp-tab-pannel js-comp-tab-pannel" data-pannel="course" style="display: block">
                                 <!-- img 200 x 112 -->
                                 <ul class="other-list">
-
-                                    <li class="curr">
+                                    {% for course in relate_courses %}
+                                        <li class="curr">
                                         <a href="course-detail.html" target="_blank">
-                                            <img src="{% static '' %}media/courses/2016/11/540e57300001d6d906000338-240-135_n0L8vbw.jpg" alt="django与vuejs实战项目2">
-                                            <span class="name autowrap">django与vuejs实战项目2</span>
+                                            <img src="{{ MEDIA_URL }}{{ course.image }}" alt="{{ course.name }}">
+                                            <span class="name autowrap">{{ course.name }}</span>
                                         </a>
                                     </li>
-
-                                    <li class="curr">
-                                        <a href="course-detail.html" target="_blank">
-                                            <img src="{% static '' %}media/courses/2016/12/python面向对象.jpg" alt="python面向对象">
-                                            <span class="name autowrap">python面向对象</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="curr">
-                                        <a href="course-detail.html" target="_blank">
-                                            <img src="{% static '' %}media/courses/2016/12/python文件处理.jpg" alt="python文件处理">
-                                            <span class="name autowrap">python文件处理</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="curr">
-                                        <a href="course-detail.html" target="_blank">
-                                            <img src="{% static '' %}media/courses/2016/11/mysql.jpg" alt="django入门">
-                                            <span class="name autowrap">django入门</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="curr">
-                                        <a href="course-detail.html" target="_blank">
-                                            <img src="{% static '' %}media/courses/2016/12/mysql.jpg" alt="xadmin进阶开发">
-                                            <span class="name autowrap">xadmin进阶开发</span>
-                                        </a>
-                                    </li>
-
+                                    {% endfor %}
                                 </ul>
                             </div>
                             <div class="cp-tab-pannel js-comp-tab-pannel" data-pannel="plan">
