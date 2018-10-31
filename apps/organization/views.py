@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.http import JsonResponse
-from .models import CourseOrg, CityDict
+from .models import CourseOrg, CityDict, Teacher
 from .forms import UserAskForm
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from operation.models import UserFavorite
@@ -175,3 +175,46 @@ class AddFavView(View):
             user_fav.fav_type = fav_type
             user_fav.save()
             return JsonResponse({'status': 'success', 'msg': '已收藏'})
+
+
+class TeacherListView(View):
+    def get(self, request):
+        all_teachers = Teacher.objects.all()
+        teacher_nums = all_teachers.count()
+        rank_teachers = Teacher.objects.all().order_by('-fav_nums')[:5]
+        sort = request.GET.get('sort', '')
+        if sort:
+            if sort == 'hot':
+                all_teachers.order_by('-click_nums')
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(all_teachers, 1, request=request)
+        teachers = p.page(page)
+        return render(request, 'teachers-list.html', {
+            'all_teachers': teachers,
+            'teacher_nums': teacher_nums,
+            'sort': sort,
+            'rank_teachers': rank_teachers,
+        })
+
+
+class TeacherDetailView(View):
+    def get(self, request, teacher_id):
+        teacher = Teacher.objects.get(pk=teacher_id)
+        all_courses = teacher.course_set.all()
+        rank_teachers = Teacher.objects.all().order_by('-fav_nums')[:5]
+        has_fav_teacher = False
+        has_fav_org = False
+        if UserFavorite.objects.filter(user=request.user, fav_id=teacher.id, fav_type=3):
+            has_fav_teacher = True
+        if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=teacher.org.id):
+            has_fav_org = True
+        return render(request, 'teacher-detail.html', {
+            'teacher': teacher,
+            'all_courses': all_courses,
+            'rank_teachers': rank_teachers,
+            'has_fav_teacher': has_fav_teacher,
+            'has_fav_org': has_fav_org,
+        })

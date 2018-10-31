@@ -110,9 +110,9 @@
                 {% for page in all_orgs.pages %}
                     {% if page %}
                         {% ifequal page all_orgs.number %}
-                            <li class=""><a href="?{{ page.querystring }}">{{ page }}</a></li>
-                        {% else %}
                             <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li class=""><a href="?{{ page.querystring }}">{{ page }}</a></li>
                         {% endifequal %}
                     {% else %}
                         <li class="none"><a href="">...</a></li>

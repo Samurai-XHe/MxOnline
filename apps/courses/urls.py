@@ -4,7 +4,7 @@ __author__ = 'xhe'
 __date__ = '18-10-26 上午9:36'
 
 
-app_name = 'courses'
+app_name = 'course'
 urlpatterns = [
     path('list/', CourseListView.as_view(), name='list'),
     path('course/<int:course_id>/', CourseDetailView.as_view(), name='course_detail'),
