@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.http import JsonResponse
+from django.db.models import Q
 from .models import CourseOrg, CityDict, Teacher
 from .forms import UserAskForm
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
@@ -15,6 +16,13 @@ class OrgView(View):
         hot_orgs = all_orgs.order_by('-click_nums')[:3]
         # 取出所有的城市
         all_citys = CityDict.objects.all()
+        # 搜索功能
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            all_orgs = all_orgs.filter(
+                Q(name__icontains=search_keywords) |
+                Q(desc__icontains=search_keywords)
+            )
         # 按城市筛选
         try:
             city_id = int(request.GET.get('city', ''))
@@ -53,6 +61,7 @@ class OrgView(View):
             'city_id': city_id,
             'category': category,
             'sort': sort,
+            'search_keywords': search_keywords,
         })
 
 
@@ -182,6 +191,13 @@ class TeacherListView(View):
         all_teachers = Teacher.objects.all()
         teacher_nums = all_teachers.count()
         rank_teachers = Teacher.objects.all().order_by('-fav_nums')[:5]
+        # 搜索功能
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            all_teachers = all_teachers.filter(
+                Q(name__icontains=search_keywords) |
+                Q(work_company__icontains=search_keywords)
+            )
         sort = request.GET.get('sort', '')
         if sort:
             if sort == 'hot':
@@ -197,6 +213,7 @@ class TeacherListView(View):
             'teacher_nums': teacher_nums,
             'sort': sort,
             'rank_teachers': rank_teachers,
+            'search_keywords': search_keywords,
         })
 
 
