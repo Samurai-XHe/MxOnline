@@ -1,4 +1,5 @@
 from django import forms
+from .models import UserProfile
 from captcha.fields import CaptchaField
 
 __author__ = 'xhe'
@@ -57,7 +58,18 @@ class ModifyPwdForm(forms.Form):
         required=True,
         min_length=5,
         error_messages={
-            'required': '请再一次密码',
+            'required': '请再输入一次密码',
             'min_length': '密码至少五位'
         })
 
+
+class UploadImageForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['image']
+
+
+class UserInfoForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['nick_name', 'birthday', 'gender', 'address', 'mobile']
