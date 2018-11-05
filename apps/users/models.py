@@ -19,6 +19,11 @@ class UserProfile(AbstractUser):
     def __str__(self):
         return self.username
 
+    def unread_nums(self):
+        from operation.models import UserMessage
+        nums = UserMessage.objects.filter(user=self.id,has_read=False).count()
+        return nums
+
 
 # 邮箱验证码model
 class EmailVerifyRecord(models.Model):

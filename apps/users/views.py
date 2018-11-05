@@ -1,4 +1,3 @@
-import json
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.backends import ModelBackend
@@ -10,6 +9,10 @@ from django.http import JsonResponse
 from .models import UserProfile, EmailVerifyRecord
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadImageForm, UserInfoForm
 from utils.email_send import send_register_email
+from operation.models import UserCourse, UserFavorite, UserMessage
+from organization.models import CourseOrg, Teacher
+from courses.models import Course
+from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
 
 # 自定义用户验证引擎，在settings中用AUTHENTICATION_BACKENDS指定该类
@@ -25,6 +28,7 @@ class CustomBackend(ModelBackend):
             return None
 
 
+# 用户注册
 class RegisterView(View):
     def get(self, request):
         register_form = RegisterForm()
@@ -43,6 +47,11 @@ class RegisterView(View):
             user_profile.password = make_password(pass_word)
             user_profile.is_active = False
             user_profile.save()
+            # 发送欢迎信息
+            user_message = UserMessage()
+            user_message.user = user_profile.id
+            user_message = '欢迎注册!'
+            user_message.save()
             # 发送邮件
             send_register_email(user_name, 'register')
             return render(request, 'login.html', {'msg': '邮箱激活链接已发送至您的邮箱，请先激活账号'})
@@ -50,6 +59,7 @@ class RegisterView(View):
             return render(request, 'register.html', {'register_form': register_form})
 
 
+# 用户登录
 class LoginView(View):
     def get(self, request):
         return render(request, 'login.html')
@@ -220,3 +230,79 @@ class UploadUserProfileView(LoginRequiredMixin, View):
             return JsonResponse({'status': 'success'})
         else:
             return JsonResponse({'status': 'fail', 'msg': '请正确填写数据'})
+
+
+class MyCourseView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        user_courses = UserCourse.objects.filter(user=request.user)
+        return render(request, 'usercenter-mycourse.html', {
+            'user_courses': user_courses
+        })
+
+
+class MyFavOrgView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        org_list = []
+        fav_orgs = UserFavorite.objects.filter(user=request.user, fav_type=2)
+        for fav_org in fav_orgs:
+            org_id = fav_org.fav_id
+            org = CourseOrg.objects.get(pk=org_id)
+            org_list.append(org)
+        return render(request, 'usercenter-fav-org.html', {
+            'org_list': org_list,
+        })
+
+
+class MyFavTeacherView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        teacher_list = []
+        fav_teachers = UserFavorite.objects.filter(user=request.user, fav_type=3)
+        for fav_teacher in fav_teachers:
+            teacher_id = fav_teacher.fav_id
+            org = Teacher.objects.get(pk=teacher_id)
+            teacher_list.append(org)
+        return render(request, 'usercenter-fav-teacher.html', {
+            'teacher_list': teacher_list,
+        })
+
+
+class MyFavCourseView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        course_list = []
+        fav_courses = UserFavorite.objects.filter(user=request.user, fav_type=1)
+        for fav_course in fav_courses:
+            course_id = fav_course.fav_id
+            course = Course.objects.get(pk=course_id)
+            course_list.append(course)
+        return render(request, 'usercenter-fav-course.html', {
+            'course_list': course_list,
+        })
+
+
+class MyMessageView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        all_message = UserMessage.objects.filter(user=request.user.id)
+        try:
+            page = request.GET.get('page', '1')
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(all_message, 5)
+        messages = p.page(page)
+        return render(request, 'usercenter-message.html', {
+            'messages': messages,
+        })
