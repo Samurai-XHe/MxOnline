@@ -1,12 +1,12 @@
-from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from django.views.generic.base import View
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from .models import UserProfile, EmailVerifyRecord
+from .models import UserProfile, EmailVerifyRecord, Banner
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadImageForm, UserInfoForm
 from utils.email_send import send_register_email
 from operation.models import UserCourse, UserFavorite, UserMessage
@@ -26,6 +26,21 @@ class CustomBackend(ModelBackend):
                 return user
         except Exception:
             return None
+
+
+# 首页View
+class IndexView(View):
+    def get(self, request):
+        all_banner = Banner.objects.all().order_by('index')[:5]
+        courses = Course.objects.filter(is_banner=False)[:6]
+        banner_courses = Course.objects.filter(is_banner=True)[:3]
+        course_orgs = CourseOrg.objects.all()[:15]
+        return render(request, 'index.html', {
+            'all_banner':all_banner,
+            'courses': courses,
+            'banner_courses': banner_courses,
+            'course_orgs': course_orgs,
+        })
 
 
 # 用户注册
@@ -80,6 +95,13 @@ class LoginView(View):
                 return render(request, 'login.html', {'msg': '用户名或者密码错误', 'login_form': login_form})
         else:
             return render(request, 'login.html', {'login_form': login_form})
+
+
+# 用户退出
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return HttpResponseRedirect(reverse('index'))
 
 
 # 激活用户
@@ -297,6 +319,10 @@ class MyMessageView(LoginRequiredMixin, View):
 
     def get(self, request):
         all_message = UserMessage.objects.filter(user=request.user.id)
+        all_unread_message = UserMessage.objects.filter(user=request.user.id, has_read=False)
+        for message in all_unread_message:
+            message.has_read = True
+            message.save()
         try:
             page = request.GET.get('page', '1')
         except PageNotAnInteger:

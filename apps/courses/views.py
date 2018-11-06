@@ -71,6 +71,8 @@ class CourseInfoView(LoginRequiredMixin, View):
 
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
+        course.click_nums += 1
+        course.save()
         # 添加用户课程
         if not UserCourse.objects.filter(course=course, user=request.user):
             user_course = UserCourse()
