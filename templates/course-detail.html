@@ -80,11 +80,11 @@
 						<p>{{ course.course_org.desc }}</p>
 					</div>
 					<div class="pic">
-                        <a href="/company/14/">
+                        <a href="{% url 'org:org_home' course.course_org.id %}">
                             <img width="150" height="80" src="{{ MEDIA_URL }}{{ course.course_org.image }}"/>
                         </a>
                     </div>
-					<a href="/company/14/">
+					<a href="{% url 'org:org_home' course.course_org.id %}">
                         <h2 class="center" title="{{ course.course_org.name }}">{{ course.course_org.name }}</h2>
                     </a>
 					<div class="btn  notlogin
@@ -144,12 +144,12 @@
                     {% for relate in relate_courses %}
                         <dl>
                             <dt>
-                                <a target="_blank" href="">
+                                <a target="_blank" href="{% url 'course:course_detail' course.id %}">
                                     <img width="240" height="220" class="scrollLoading" src="{{ MEDIA_URL }}{{ relate.image }}"/>
                                 </a>
                             </dt>
                             <dd>
-                                <a target="_blank" href=""><h2> {{ relate.name }}</h2></a>
+                                <a target="_blank" href="{% url 'course:course_detail' course.id %}"><h2> {{ relate.name }}</h2></a>
                                 <span class="fl">学习时长：<i class="key">0</i></span>
                             </dd>
                         </dl>

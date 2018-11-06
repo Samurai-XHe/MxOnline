@@ -7,7 +7,7 @@ __date__ = '18-9-30 上午10:06'
 
 class CourseAdmin(object):
     list_display = [
-        'name', 'desc', 'detail', 'degree', 'learn_times', 'students', 'teacher']
+        'name', 'desc', 'detail', 'degree', 'learn_times', 'students', 'teacher', 'fav_nums']
     search_fields = [
         'name', 'desc', 'detail', 'degree', 'students']
     list_filter = [

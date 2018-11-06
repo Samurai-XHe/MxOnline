@@ -190,7 +190,7 @@ class AddFavView(View):
                 org.fav_nums -= 1
                 if org.fav_nums < 0:
                     org.fav_nums = 0
-                    org.save()
+                org.save()
             elif int(fav_type) == 3:
                 teacher = Teacher.objects.get(pk=int(fav_id))
                 teacher.fav_nums -= 1
