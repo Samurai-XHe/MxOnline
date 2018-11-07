@@ -332,3 +332,21 @@ class MyMessageView(LoginRequiredMixin, View):
         return render(request, 'usercenter-message.html', {
             'messages': messages,
         })
+
+
+# 配置全局403页面
+def csrf_error(request):
+    return render(request, '403.html', status=403)
+
+
+# 配置全局404页面
+def page_not_fond(request):
+    return render(request, '404.html', status=404)
+
+
+# 配置全局500页面
+def page_error(request):
+    return render(request, '500.html', status=500)
+
+
+

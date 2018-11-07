@@ -186,6 +186,7 @@
                 cache: false,
                 type: 'POST',
                 url: "{% url 'course:add_comment' %}",
+                async: false,
                 data: {
                     'comments': comments,
                     'course_id': {{ course.id }}

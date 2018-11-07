@@ -16,12 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
-from django.conf.urls.static import static
-from django.views.generic import TemplateView
+from django.views.static import serve
 from users.views import LoginView, LogoutView, RegisterView, ActiveUserView, ForgetPwdView, ResetView, ModifyPwdView
 from users.views import IndexView
 import xadmin
-# from django.views.static import serve
 
 
 urlpatterns = [
@@ -39,6 +37,11 @@ urlpatterns = [
     path('org/', include('organization.urls')),
     path('course/', include('courses.urls')),
     path('users/', include('users.urls')),
-    # re_path('media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT})
+    re_path('static/(?P<path>.*)', serve, {'document_root': settings.STATIC_ROOT}),
+    re_path('media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT})
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler403 = 'users.views.csrf_error'
+handler404 = 'users.views.page_not_fond'
+handler500 = 'users.views.page_error'
+
