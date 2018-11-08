@@ -13,9 +13,13 @@ class CityDictAdmin(object):
 
 class CourseOrgAdmin(object):
     list_display = ['name', 'desc', 'category', 'click_nums', 'fav_nums', 'add_time']
-    search_fields = ['name', 'desc', 'click_nums', 'fav_nums', 'category']
+    search_fields = ['name', 'desc', 'click_nums', 'fav_nums', 'category']  # 搜索字段
     list_filter = [
-        'name', 'desc', 'click_nums', 'category', 'fav_nums', 'city__name', 'address', 'add_time']
+        'name', 'desc', 'click_nums', 'category', 'fav_nums', 'city__name', 'address', 'add_time']  # 过滤器
+    ordering = ['-click_nums']  # 按字段排序
+    readonly_fields = ['click_nums', 'fav_nums']  # 只读字段
+    exclude = []  # 详情页面中不显示的字段
+    relfield_style = 'fk-ajax'
 
 
 class TeacherAdmin(object):

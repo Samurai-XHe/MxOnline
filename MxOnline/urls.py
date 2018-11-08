@@ -37,7 +37,7 @@ urlpatterns = [
     path('org/', include('organization.urls')),
     path('course/', include('courses.urls')),
     path('users/', include('users.urls')),
-    re_path('static/(?P<path>.*)', serve, {'document_root': settings.STATIC_ROOT}),
+    # re_path('static/(?P<path>.*)', serve, {'document_root': settings.STATIC_ROOT}),
     re_path('media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT})
 ]
 

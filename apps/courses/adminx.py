@@ -11,7 +11,7 @@ class CourseAdmin(object):
     search_fields = [
         'name', 'desc', 'detail', 'degree', 'students']
     list_filter = [
-        'name', 'desc', 'detail', 'degree', 'learn_times', 'students']
+        'name', 'desc', 'detail', 'degree', 'learn_times', 'students', 'is_banner']
 
 
 class LessonAdmin(object):
