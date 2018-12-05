@@ -65,7 +65,7 @@ class RegisterView(View):
             # 发送欢迎信息
             user_message = UserMessage()
             user_message.user = user_profile.id
-            user_message = '欢迎注册!'
+            user_message.message = '欢迎注册!'
             user_message.save()
             # 发送邮件
             send_register_email(user_name, 'register')
@@ -335,18 +335,18 @@ class MyMessageView(LoginRequiredMixin, View):
 
 
 # 配置全局403页面
-def csrf_error(request):
+def csrf_error(request, **kwargs):
     return render(request, '403.html', status=403)
 
 
 # 配置全局404页面
-def page_not_fond(request):
+def page_not_fond(request, **kwargs):
     return render(request, '404.html', status=404)
 
 
 # 配置全局500页面
-def page_error(request):
-    return render(request, '500.html', status=500)
+def page_error(request, **kwargs):
+    return render(request, '500.html', status=503)
 
 
 

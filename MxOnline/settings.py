@@ -125,7 +125,8 @@ USE_TZ = False
 
 # 指定自定义的用户验证引擎
 AUTHENTICATION_BACKENDS = [
-    'users.views.CustomBackend',]
+    'users.views.CustomBackend',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -136,7 +137,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
 
 # 分页器配置
 PAGINATION_SETTINGS = {

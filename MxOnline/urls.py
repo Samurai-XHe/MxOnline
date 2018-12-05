@@ -30,18 +30,18 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
     path('captcha/', include('captcha.urls')),
-    re_path('active/(?P<active_code>.*)/', ActiveUserView.as_view(), name="user_active"),
+    path('active/<active_code>/', ActiveUserView.as_view(), name="user_active"),
     path('forget/', ForgetPwdView.as_view(), name='forget_pwd'),
-    re_path('reset/(?P<active_code>.*)/', ResetView.as_view(), name="reset_pwd"),
+    re_path(r'^reset/(?P<active_code>.*)/', ResetView.as_view(), name="reset_pwd"),
     path('modify_pwd/', ModifyPwdView.as_view(), name='modify_pwd'),
     path('org/', include('organization.urls')),
     path('course/', include('courses.urls')),
     path('users/', include('users.urls')),
-    # re_path('static/(?P<path>.*)', serve, {'document_root': settings.STATIC_ROOT}),
-    re_path('media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT})
+    # path('static<path:path>', serve, {'document_root': settings.STATIC_ROOT}),  # 部署后也可以交由nginx处理静态文件
+    path('media<path:path>', serve, {'document_root': settings.MEDIA_ROOT})
 ]
 
+# 配置错误页面
 handler403 = 'users.views.csrf_error'
 handler404 = 'users.views.page_not_fond'
-handler500 = 'users.views.page_error'
-
+handler503 = 'users.views.page_error'
