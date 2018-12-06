@@ -67,7 +67,7 @@ class CourseDetailView(View):
 
 class CourseInfoView(LoginRequiredMixin, View):
     login_url = '/login/'
-    redirect_field_name = 'redirect_to'
+    redirect_field_name = 'next'
 
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)

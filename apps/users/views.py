@@ -1,4 +1,5 @@
-from django.shortcuts import render, HttpResponseRedirect, reverse
+import logging
+from django.shortcuts import render, HttpResponseRedirect, reverse, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
@@ -14,7 +15,7 @@ from organization.models import CourseOrg, Teacher
 from courses.models import Course
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
-
+logger = logging.getLogger(__name__)
 # 自定义用户验证引擎，在settings中用AUTHENTICATION_BACKENDS指定该类
 class CustomBackend(ModelBackend):
     # 使用户能够通过用户名或者邮箱地址登录
@@ -77,7 +78,8 @@ class RegisterView(View):
 # 用户登录
 class LoginView(View):
     def get(self, request):
-        return render(request, 'login.html')
+        next_url = request.GET.get('next', '')
+        return render(request, 'login.html', {'next': next_url})
 
     def post(self, request):
         login_form = LoginForm(request.POST)
@@ -88,7 +90,10 @@ class LoginView(View):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return render(request, 'index.html', )
+                    next_url = request.GET.get('next', '')
+                    if next_url:
+                        return redirect(next_url)
+                    return redirect('index')
                 else:
                     return render(request, 'login.html', {'msg': '用户未激活'})
             else:

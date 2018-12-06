@@ -252,6 +252,7 @@ class TeacherListView(View):
 
 class TeacherDetailView(View):
     def get(self, request, teacher_id):
+        user = request.user
         teacher = Teacher.objects.get(pk=teacher_id)
         teacher.click_nums += 1
         teacher.save()
@@ -259,9 +260,9 @@ class TeacherDetailView(View):
         rank_teachers = Teacher.objects.all().order_by('-fav_nums')[:5]
         has_fav_teacher = False
         has_fav_org = False
-        if UserFavorite.objects.filter(user=request.user, fav_id=teacher.id, fav_type=3):
+        if UserFavorite.objects.filter(user=user, fav_id=teacher.id, fav_type=3).exists():
             has_fav_teacher = True
-        if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=teacher.org.id):
+        if UserFavorite.objects.filter(user=user, fav_type=2, fav_id=teacher.org.id).exists():
             has_fav_org = True
         return render(request, 'teacher-detail.html', {
             'teacher': teacher,
