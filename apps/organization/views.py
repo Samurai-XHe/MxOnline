@@ -260,10 +260,12 @@ class TeacherDetailView(View):
         rank_teachers = Teacher.objects.all().order_by('-fav_nums')[:5]
         has_fav_teacher = False
         has_fav_org = False
-        if UserFavorite.objects.filter(user=user, fav_id=teacher.id, fav_type=3).exists():
-            has_fav_teacher = True
-        if UserFavorite.objects.filter(user=user, fav_type=2, fav_id=teacher.org.id).exists():
-            has_fav_org = True
+        # 匿名用户不能用来查询,所以要先判断是否登录,否则会报'AnonymousUser' object is not iterable错误
+        if user.is_authenticated:
+            if UserFavorite.objects.filter(user=user, fav_id=teacher_id, fav_type=3).exists():
+                has_fav_teacher = True
+            if UserFavorite.objects.filter(user=user, fav_type=2, fav_id=teacher.org.id).exists():
+                has_fav_org = True
         return render(request, 'teacher-detail.html', {
             'teacher': teacher,
             'all_courses': all_courses,
