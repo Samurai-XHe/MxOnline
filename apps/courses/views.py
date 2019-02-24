@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic.base import View
+from django.views.generic import View
 from django.http.response import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
@@ -21,11 +21,10 @@ class CourseListView(View):
                 Q(detail__icontains=search_keywords)
             )
         sort = request.GET.get('sort', '')
-        if sort:
-            if sort == 'students':
-                all_courses = all_courses.order_by('-students')
-            elif sort == 'hot':
-                all_courses = all_courses.order_by('-click_nums')
+        if sort == 'students':
+            all_courses = all_courses.order_by('-students')
+        elif sort == 'hot':
+            all_courses = all_courses.order_by('-click_nums')
         try:
             page = request.GET.get('page', '1')
         except PageNotAnInteger:
@@ -95,7 +94,7 @@ class CourseInfoView(LoginRequiredMixin, View):
 
 class CommentsView(LoginRequiredMixin, View):
     login_url = '/login/'
-    redirect_field_name = 'redirect_to'
+    redirect_field_name = 'next'
 
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)

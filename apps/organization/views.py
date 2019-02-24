@@ -101,7 +101,7 @@ class OrgHomeView(View):
 
 
 class OrgCourseView(View):
-    # 机构课程列表页
+    '''机构课程列表页'''
     def get(self, request, org_id):
         if CourseOrg.objects.filter(pk=org_id).exists():
             course_org = CourseOrg.objects.get(pk=org_id)
@@ -161,6 +161,9 @@ class OrgTeacherView(View):
 class AddFavView(View):
     # 用户收藏与取消收藏
     def post(self, request):
+        # 未登录时返回json提示未登录，跳转到登录页面是在ajax中做的
+        if not request.user.is_authenticated:
+            return JsonResponse({'status': 'fail', 'msg': '用户未登录'})
         try:
             fav_id = int(request.POST.get('fav_id', 0))
         except ValueError:
@@ -172,9 +175,6 @@ class AddFavView(View):
         #  过滤掉未取到fav_id type的默认情况
         if fav_id == 0 or fav_type == 0:
             return JsonResponse({'status': 'fail', 'msg': '收藏出错'})
-        # 未登录时返回json提示未登录，跳转到登录页面是在ajax中做的
-        if not request.user.is_authenticated:
-            return JsonResponse({'status': 'fail', 'msg': '用户未登录'})
         exist_records = UserFavorite.objects.filter(user=request.user, fav_id=fav_id, fav_type=fav_type)
         # 如果记录已经存在， 则表示用户要取消收藏
         if exist_records:
