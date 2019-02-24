@@ -17,6 +17,7 @@
             <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
             <strong>{% trans 'Welcome,' %} {% firstof user.first_name user.username %}</strong> <span class="caret"></span></a>
             <ul id="g-account-menu" class="dropdown-menu" role="menu">
+                <li><a href="{% url 'index' %}"><i class="fa fa-youtube-play" aria-hidden="true"></i>&nbsp;访问站点</a></li>
               {% view_block 'top_account_menu' %}
             </ul>
           </li>

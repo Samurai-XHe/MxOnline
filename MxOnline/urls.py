@@ -37,8 +37,8 @@ urlpatterns = [
     path('org/', include('organization.urls')),
     path('course/', include('courses.urls')),
     path('users/', include('users.urls')),
-    # path('static<path:path>', serve, {'document_root': settings.STATIC_ROOT}),  # 部署后也可以交由nginx处理静态文件
-    path('media<path:path>', serve, {'document_root': settings.MEDIA_ROOT})
+    path('static<path:path>', serve, {'document_root': settings.STATIC_ROOT}),  # 部署后也可以交由nginx处理静态文件
+    path('media<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 
 # 配置错误页面

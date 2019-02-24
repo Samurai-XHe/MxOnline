@@ -1,9 +1,9 @@
 import logging
-from django.shortcuts import render, HttpResponseRedirect, reverse, redirect
+from django.shortcuts import render, reverse, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
-from django.views.generic.base import View
+from django.views.generic import View
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
@@ -106,7 +106,7 @@ class LoginView(View):
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return HttpResponseRedirect(reverse('index'))
+        return redirect(reverse('index'))
 
 
 # 激活用户
